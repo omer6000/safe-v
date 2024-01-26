@@ -128,8 +128,46 @@ pub(super) fn failure_probability(tree: &Tree) -> Ratio {
     }
 }
 
+fn override_tree(tree: &Tree, override_events: &BTreeSet<Event>) -> Tree {
+    match tree {
+        Tree::BasicEvent(e) => {
+            for elem in override_events {
+                if elem.0 == e.0 {
+                    return Tree::BasicEvent(elem.clone());
+                }
+            }
+            return Tree::BasicEvent(e.clone())
+        }
+        Tree::IntermediateEvent(_, t) => override_tree(t, override_events),
+        Tree::Gate(gate) => {
+            match gate {
+                Gate::And(v) => {
+                    let tree_vecs = v.iter().map(|x| override_tree(x,override_events)).collect();
+                    return Tree::Gate(Gate::And(tree_vecs));
+                }
+                Gate::Or(v) => {
+                    let tree_vecs = v.iter().map(|x| override_tree(x,override_events)).collect();
+                    return Tree::Gate(Gate::Or(tree_vecs));
+                }
+            }
+        }
+    }
+}
+
 pub(super) fn q0(tree: &Tree, override_events: &BTreeSet<Event>) -> Ratio {
-    todo!()
+    let new_tree = override_tree(tree, override_events);
+    let cut_sets = minimal_cut_sets(&new_tree);
+    let ratio_one =  Ratio::new::<percent>(100.into());
+    let mut q0 = Ratio::new::<percent>(100.into());
+    for cut_set in cut_sets {
+        let mut qi = Ratio::new::<percent>(100.into());
+        for elem in cut_set {
+            qi = qi * elem.1;
+        }
+        q0 = q0 * (ratio_one - qi);
+    }
+    q0 = ratio_one - q0;
+    return q0;
 }
 
 pub(super) fn birnbaum_importance(tree: &Tree, event: &str) -> Ratio {
