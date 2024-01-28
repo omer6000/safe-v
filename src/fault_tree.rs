@@ -171,9 +171,12 @@ pub(super) fn q0(tree: &Tree, override_events: &BTreeSet<Event>) -> Ratio {
 }
 
 pub(super) fn birnbaum_importance(tree: &Tree, event: &str) -> Ratio {
-    todo!()
+    let event1 = BTreeSet::from_iter(vec![Event(event.into(),Ratio::new::<percent>(100.into()))]);
+    let event0 = BTreeSet::from_iter(vec![Event(event.into(),Ratio::new::<percent>(0.into()))]);
+    return q0(tree, &event1) - q0(tree, &event0)
 }
 
 pub(super) fn improvement_potential_importance(tree: &Tree, event: &str) -> Ratio {
-    todo!()
+    let event0 = BTreeSet::from_iter(vec![Event(event.into(),Ratio::new::<percent>(0.into()))]);
+    return q0(tree, &BTreeSet::new()) - q0(tree, &event0)
 }
