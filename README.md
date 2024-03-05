@@ -1,7 +1,13 @@
-# SAFE-V
+# SAFE-V Project
 
-This is a project of the "Hands-On Dependability" course.
-For more details, check out the [task sheet](https://hod.cs.uni-saarland.de/projects/P03.html).
+## Overview
+SAFE-V is part of the Hands-on Dependability course, aimed at enhancing safety analysis of autonomous vessels through fault tree analysis. This project focuses on developing software features for efficient fault tree analysis, including finding minimal cut sets and introducing quantitative analysis capabilities.
 
-sudo docker run --rm --cpus=1 --stop-timeout 180 -v $PWD/src/fault_tree.rs:/opt/safe-v/src/fault_tree.rs -w /opt/safe-v hod cargo test -v
-cargo run --release --bin bench
+## Technologies Used
+- Rust Programming Language
+- Fault tree analysis techniques
+
+## Features
+- Efficient algorithm for minimal cut sets identification
+- Computation of minimal path sets for safety analysis
+- Implementation of quantitative fault tree analysis
